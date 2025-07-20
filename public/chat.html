@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Chat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            <h1>🎨 AI Image Chat</h1>
+            <p>Chat with AI to create and iterate on images</p>
+        </header>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="welcome-message">
+                <div class="message assistant">
+                    <div class="message-content">
+                        <p>👋 Hello! I'm your AI image assistant. You can ask me to:</p>
+                        <ul>
+                            <li>Generate new images from descriptions</li>
+                            <li>Modify or iterate on existing images</li>
+                            <li>Discuss image ideas and get suggestions</li>
+                        </ul>
+                        <p>Just describe what you'd like to see, and I'll help bring your vision to life!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="chat-controls">
+                <div class="control-group">
+                    <label for="sizeSelect">Size:</label>
+                    <select id="sizeSelect">
+                        <option value="1024x1024" selected>Square (1024×1024)</option>
+                        <option value="1024x1536">Portrait (1024×1536)</option>
+                        <option value="1536x1024">Landscape (1536×1024)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="qualitySelect">Quality:</label>
+                    <select id="qualitySelect">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="auto">Auto</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Cost per Image:</label>
+                    <div class="price-display" id="chatPrice">
+                        <span class="token-count" id="tokenCount">1.1k tokens</span>
+                        <span class="price-amount" id="priceAmount">($0.011)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Pricing Information -->
+            <div class="pricing-section" style="margin-bottom: 15px;">
+                <details>
+                    <summary style="cursor: pointer; font-weight: 600; color: #1e40af;">💰 Token Usage & Pricing</summary>
+                    <div id="chatPricingTable" style="margin-top: 10px;">
+                        <!-- Chat pricing table will be inserted here -->
+                    </div>
+                </details>
+            </div>
+            <form id="chatForm" class="chat-form">
+                <div class="input-group">
+                    <textarea 
+                        id="messageInput" 
+                        placeholder="Describe the image you want to create or ask me anything..."
+                        rows="2"
+                        maxlength="1000"
+                    ></textarea>
+                    <button type="submit" id="sendButton" class="send-button">
+                        <span class="send-icon">➤</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div id="loading" class="loading-indicator hidden">
+            <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <p>AI is thinking...</p>
+        </div>
+    </div>
+    
+    <script src="pricing.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>

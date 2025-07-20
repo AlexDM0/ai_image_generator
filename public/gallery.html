@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Gallery</title>
+    <link rel="stylesheet" href="gallery-styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header card">
+            <h1>🖼️ AI Image Gallery</h1>
+            <p>Browse and explore all your generated AI images</p>
+            <div class="nav">
+                <a href="index.html" class="nav-link">🏠 Home</a>
+                <a href="direct.html" class="nav-link">🎨 Direct Generation</a>
+                <a href="chat.html" class="nav-link">💬 Chat Interface</a>
+            </div>
+        </div>
+
+        <div class="gallery-controls card">
+            <div class="controls-row">
+                <div class="stats-section">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Images:</span>
+                        <span class="stat-value" id="totalImages">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Size:</span>
+                        <span class="stat-value" id="totalSize">0 MB</span>
+                    </div>
+                </div>
+                
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label for="modelFilter">Model:</label>
+                        <select id="modelFilter" class="form-control">
+                            <option value="">All Models</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="typeFilter">Type:</label>
+                        <select id="typeFilter" class="form-control">
+                            <option value="">All Types</option>
+                            <option value="direct">Direct Generation</option>
+                            <option value="chat">Chat Interface</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sizeFilter">Size:</label>
+                        <select id="sizeFilter" class="form-control">
+                            <option value="">All Sizes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-section">
+                    <button id="reloadBtn" class="btn btn-primary">
+                        🔄 Reload Gallery
+                    </button>
+                    <button id="viewToggle" class="btn btn-secondary">
+                        📋 Grid View
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading card hidden" id="loadingIndicator">
+            <div class="spinner"></div>
+            <p>Loading gallery...</p>
+        </div>
+
+        <div class="gallery-container" id="galleryContainer">
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Images will be loaded here -->
+            </div>
+        </div>
+
+        <div class="error-overlay hidden" id="errorOverlay">
+            <div class="error-content">
+                <h3>Error Loading Gallery</h3>
+                <p id="errorMessage">Failed to load images</p>
+                <button class="btn btn-danger" id="errorClose">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal hidden" id="imageModal">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Image Details</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img id="modalImage" src="" alt="Full size image">
+                </div>
+                <div class="modal-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Filename:</span>
+                        <span class="detail-value" id="modalFilename"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Model:</span>
+                        <span class="detail-value" id="modalModel"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Size:</span>
+                        <span class="detail-value" id="modalSize"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Quality:</span>
+                        <span class="detail-value" id="modalQuality"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Type:</span>
+                        <span class="detail-value" id="modalType"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">File Size:</span>
+                        <span class="detail-value" id="modalFileSize"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Created:</span>
+                        <span class="detail-value" id="modalCreated"></span>
+                    </div>
+                    <div class="detail-row full-width" id="modalPromptRow">
+                        <span class="detail-label">Prompt:</span>
+                        <span class="detail-value" id="modalPrompt"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="downloadBtn">💾 Download</button>
+                <button class="btn btn-secondary" id="copyUrlBtn">🔗 Copy URL</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="gallery.js"></script>
+</body>
+</html>

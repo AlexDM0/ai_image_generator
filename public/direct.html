@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct Image Generation</title>
+    <link rel="stylesheet" href="direct-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎨 Direct Image Generation</h1>
+            <p>Generate images directly using DALL-E API</p>
+            <nav class="nav">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/chat.html" class="nav-link">Chat Interface</a>
+            </nav>
+        </header>
+        
+        <div class="form-container">
+            <form id="imageForm" class="image-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="model">Model:</label>
+                        <select id="model" name="model" class="form-control">
+                            <option value="dall-e-2">DALL-E 2 (Faster, Cheaper)</option>
+                            <option value="dall-e-3" selected>DALL-E 3 (Higher Quality)</option>
+                            <option value="gpt-image-1">GPT Image 1 (Latest Model)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="size">Resolution:</label>
+                        <select id="size" name="size" class="form-control">
+                            <option value="256x256" selected>Tiny Square (256×256)</option>
+                            <option value="512x512">Small Square (512×512)</option>
+                            <option value="1024x1024">Square (1024×1024)</option>
+                            <option value="1792x1024">Landscape (1792×1024)</option>
+                            <option value="1024x1792">Portrait (1024×1792)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quality">Quality:</label>
+                        <select id="quality" name="quality" class="form-control">
+                            <option value="auto" selected>Auto (Recommended)</option>
+                            <option value="standard">Standard</option>
+                            <option value="hd">HD (DALL-E 3 only)</option>
+                            <option value="low">Low (GPT Image 1 only)</option>
+                            <option value="medium">Medium (GPT Image 1 only)</option>
+                            <option value="high">High (GPT Image 1 only)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cost">Cost:</label>
+                        <div class="cost-display" id="costDisplay">$0.04</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="systemPrompt">System Prompt (Optional):</label>
+                    <textarea 
+                        id="systemPrompt" 
+                        name="systemPrompt" 
+                        class="form-control"
+                        rows="2" 
+                        placeholder="Add a persistent style or instruction that will be applied to all generations (e.g., 'in the style of Van Gogh', 'photorealistic', 'cartoon style')..."
+                        maxlength="500"
+                    ></textarea>
+                    <div class="char-count">
+                        <span id="systemCharCount">0</span>/500
+                    </div>
+                    <div class="system-prompt-actions">
+                        <button type="button" id="saveSystemPrompt" class="system-button btn btn-secondary">💾 Save as Default</button>
+                        <button type="button" id="clearSystemPrompt" class="system-button btn btn-danger">🗑️ Clear</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prompt">Your Image Prompt:</label>
+                    <textarea 
+                        id="prompt" 
+                        name="prompt" 
+                        class="form-control"
+                        rows="4" 
+                        placeholder="Describe the image you want to generate..."
+                        maxlength="1000"
+                        required
+                    ></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span>/1000
+                    </div>
+                </div>
+                
+                <button type="submit" class="generate-button" id="generateBtn">
+                    <span id="generateText">🎨 Generate Image</span>
+                    <span class="current-price" id="currentPrice">$0.04</span>
+                </button>
+            </form>
+
+        </div>
+        
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Generating your image...</p>
+        </div>
+        
+        <div id="result" class="result hidden">
+            <h2>Generated Image:</h2>
+            <div class="image-container">
+                <img id="generatedImage" alt="Generated image" onclick="openFullSize()">
+            </div>
+            <div class="image-info">
+                <div class="info-item">
+                    <strong>Filename:</strong> <span id="filename"></span>
+                </div>
+                <div class="info-item">
+                    <strong>Generated at:</strong> <span id="timestamp"></span>
+                </div>
+                <div class="info-item">
+                    <strong>Model:</strong> <span id="usedModel"></span>
+                </div>
+                <div class="info-item">
+                    <strong>Resolution:</strong> <span id="usedSize"></span>
+                </div>
+                <div class="info-item">
+                    <strong>Quality:</strong> <span id="usedQuality"></span>
+                </div>
+                <div class="info-item">
+                    <strong>Final Prompt:</strong> <span id="usedPrompt"></span>
+                </div>
+            </div>
+            <div class="actions">
+                <button onclick="downloadImage()" class="action-button">
+                    📥 Download
+                </button>
+                <button onclick="generateAnother()" class="action-button secondary">
+                    🔄 Generate Another
+                </button>
+            </div>
+        </div>
+        
+        <div id="error" class="error hidden">
+            <div class="error-content">
+                <h3>❌ Error</h3>
+                <p id="errorMessage"></p>
+                <button onclick="hideError()" class="error-close">Close</button>
+            </div>
+        </div>
+        
+        <div class="history" id="history">
+            <h3>Recent Images</h3>
+            <div id="historyList" class="history-list">
+                <!-- Recent images will be populated here -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="pricing.js"></script>
+    <script src="direct.js"></script>
+</body>
+</html>

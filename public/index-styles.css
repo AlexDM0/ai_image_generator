@@ -1,0 +1,178 @@
+/* Import base styles */
+@import url('./base-styles.css');
+
+/* Landing Page Specific Styles */
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 800px;
+    width: 90%;
+    text-align: center;
+}
+
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px 40px;
+    border-radius: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #1e40af, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.header p {
+    font-size: 1.3rem;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.interfaces {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.interface-card {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.interface-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.interface-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.interface-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.interface-description {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.interface-features {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.interface-features li {
+    padding: 8px 0;
+    color: #555;
+    position: relative;
+    padding-left: 25px;
+}
+
+.interface-features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #3b82f6;
+    font-weight: bold;
+}
+
+.interface-button {
+    background: linear-gradient(45deg, #1e40af, #3b82f6);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.interface-card:hover .interface-button {
+    background: linear-gradient(45deg, #1d4ed8, #2563eb);
+    transform: translateY(-2px);
+}
+
+.footer {
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    color: #666;
+}
+
+.footer p {
+    margin-bottom: 10px;
+}
+
+.tech-stack {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.tech-item {
+    background: #f8f9fa;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #495057;
+    border: 1px solid #e9ecef;
+}
+
+/* Landing page responsive design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .header p {
+        font-size: 1.1rem;
+    }
+    
+    .interfaces {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .interface-card {
+        padding: 30px 20px;
+    }
+    
+    .tech-stack {
+        gap: 10px;
+    }
+    
+    .tech-item {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
