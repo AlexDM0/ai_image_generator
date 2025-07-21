@@ -45,27 +45,17 @@
                         <option value="low">Low</option>
                         <option value="medium" selected>Medium</option>
                         <option value="high">High</option>
-                        <option value="auto">Auto</option>
                     </select>
                 </div>
                 <div class="control-group">
                     <label>Cost per Image:</label>
                     <div class="price-display" id="chatPrice">
-                        <span class="token-count" id="tokenCount">1.1k tokens</span>
-                        <span class="price-amount" id="priceAmount">($0.011)</span>
+                        <span class="price-amount" id="priceAmount">$0.011</span>
                     </div>
                 </div>
             </div>
             
-            <!-- Chat Pricing Information -->
-            <div class="pricing-section" style="margin-bottom: 15px;">
-                <details>
-                    <summary style="cursor: pointer; font-weight: 600; color: #1e40af;">💰 Token Usage & Pricing</summary>
-                    <div id="chatPricingTable" style="margin-top: 10px;">
-                        <!-- Chat pricing table will be inserted here -->
-                    </div>
-                </details>
-            </div>
+
             <form id="chatForm" class="chat-form">
                 <div class="input-group">
                     <textarea 

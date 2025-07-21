@@ -18,10 +18,8 @@ class ChatInterface {
         this.sizeSelect = document.getElementById('sizeSelect');
         this.qualitySelect = document.getElementById('qualitySelect');
         
-        // Pricing elements
-        this.tokenCount = document.getElementById('tokenCount');
+        // Cost display element
         this.priceAmount = document.getElementById('priceAmount');
-        this.chatPricingTable = document.getElementById('chatPricingTable');
     }
 
     attachEventListeners() {
@@ -231,19 +229,17 @@ class ChatInterface {
     // Pricing functionality
     initializePricing() {
         this.updatePricing();
-        this.displayChatPricingTable();
     }
 
     updatePricing() {
-        const quality = this.qualitySelect.value;
         const size = this.sizeSelect.value;
+        const quality = this.qualitySelect.value;
         
-        const tokens = this.pricingCalculator.getChatTokens(quality, size);
+        // Update price display
         const cost = this.pricingCalculator.getChatCost(quality, size);
         
-        if (this.tokenCount && this.priceAmount) {
-            this.tokenCount.textContent = this.pricingCalculator.formatTokens(tokens);
-            this.priceAmount.textContent = `(${this.pricingCalculator.formatPrice(cost)})`;
+        if (cost !== null) {
+            this.priceAmount.textContent = `$${cost.toFixed(3)}`;
         }
     }
 
