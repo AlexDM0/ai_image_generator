@@ -45,8 +45,13 @@ class DirectImageGenerator {
         this.saveSystemPromptBtn.addEventListener('click', () => this.saveSystemPrompt());
         this.clearSystemPromptBtn.addEventListener('click', () => this.clearSystemPrompt());
         
+        // Model change event listener - update dropdowns and pricing
+        this.modelSelect.addEventListener('change', () => {
+            this.updateDropdownsForModel();
+            this.updateCurrentPrice();
+        });
+        
         // Pricing event listeners
-        this.modelSelect.addEventListener('change', () => this.updateCurrentPrice());
         this.sizeSelect.addEventListener('change', () => this.updateCurrentPrice());
         this.qualitySelect.addEventListener('change', () => this.updateCurrentPrice());
         
@@ -292,8 +297,101 @@ class DirectImageGenerator {
         }, 3000);
     }
 
+    // Dynamic dropdown updating
+    updateDropdownsForModel() {
+        const selectedModel = this.modelSelect.value;
+        
+        // Get available options for the selected model
+        const availableQualities = this.pricingCalculator.getAvailableQualities(selectedModel);
+        const availableSizes = this.pricingCalculator.getAvailableSizes(selectedModel);
+        
+        // Update quality dropdown
+        this.updateQualityDropdown(availableQualities, selectedModel);
+        
+        // Update size dropdown
+        this.updateSizeDropdown(availableSizes, selectedModel);
+    }
+    
+    updateQualityDropdown(availableQualities, model) {
+        const currentValue = this.qualitySelect.value;
+        
+        // Clear existing options
+        this.qualitySelect.innerHTML = '';
+        
+        // Define quality labels and descriptions
+        const qualityLabels = {
+            'standard': 'Standard',
+            'hd': 'HD',
+            'low': 'Low ',
+            'medium': 'Medium',
+            'high': 'High'
+        };
+        
+        // Add available quality options
+        let defaultSelected = false;
+        availableQualities.forEach(quality => {
+            const option = document.createElement('option');
+            option.value = quality;
+            option.textContent = qualityLabels[quality] || quality.charAt(0).toUpperCase() + quality.slice(1);
+            
+            // Select the option if it matches the current value, or select 'auto' as default
+            if (quality === currentValue || (!defaultSelected && quality === 'auto')) {
+                option.selected = true;
+                defaultSelected = true;
+            }
+            
+            this.qualitySelect.appendChild(option);
+        });
+        
+        // If no 'auto' option and nothing was selected, select the first available
+        if (!defaultSelected && availableQualities.length > 0) {
+            this.qualitySelect.children[0].selected = true;
+        }
+    }
+    
+    updateSizeDropdown(availableSizes, model) {
+        const currentValue = this.sizeSelect.value;
+        
+        // Clear existing options
+        this.sizeSelect.innerHTML = '';
+        
+        // Define size labels
+        const sizeLabels = {
+            '256x256': 'Tiny Square (256×256)',
+            '512x512': 'Small Square (512×512)',
+            '1024x1024': 'Square (1024×1024)',
+            '1024x1536': 'Portrait (1024×1536)',
+            '1536x1024': 'Landscape (1536×1024)',
+            '1024x1792': 'Portrait (1024×1792)',
+            '1792x1024': 'Landscape (1792×1024)'
+        };
+        
+        // Add available size options
+        let defaultSelected = false;
+        availableSizes.forEach(size => {
+            const option = document.createElement('option');
+            option.value = size;
+            option.textContent = sizeLabels[size] || size;
+            
+            // Select the option if it matches the current value, or select '1024x1024' as default
+            if (size === currentValue || (!defaultSelected && size === '1024x1024')) {
+                option.selected = true;
+                defaultSelected = true;
+            }
+            
+            this.sizeSelect.appendChild(option);
+        });
+        
+        // If no '1024x1024' option and nothing was selected, select the first available
+        if (!defaultSelected && availableSizes.length > 0) {
+            this.sizeSelect.children[0].selected = true;
+        }
+    }
+
     // Pricing functionality
     initializePricing() {
+        // Initialize dropdowns for the default model
+        this.updateDropdownsForModel();
         this.updateCurrentPrice();
     }
 
