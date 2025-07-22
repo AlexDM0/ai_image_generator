@@ -88,5 +88,15 @@ export const FileUtil = {
    */
   getImagesDirectory: (): string => {
     return Paths.imagesDir;
+  },
+
+  /**
+   * Saves a buffer to a file
+   * @param buffer The buffer containing the file data
+   * @param filePath The path where the file should be saved
+   */
+  saveBufferToFile: (buffer: Buffer, filePath: string): void => {
+    fs.writeFileSync(filePath, buffer, 'base64');
+    console.log(`✅ File saved successfully to: ${filePath}`);
   }
 };

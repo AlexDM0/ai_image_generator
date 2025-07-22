@@ -151,13 +151,13 @@ class DirectImageGenerator {
         this.loading.classList.remove('hidden');
         this.result.classList.add('hidden');
         this.generateBtn.disabled = true;
-        this.generateBtn.querySelector('.button-text').textContent = 'Generating...';
+        document.getElementById('generateText').textContent = 'Generating...';
     }
 
     hideLoading() {
         this.loading.classList.add('hidden');
         this.generateBtn.disabled = false;
-        this.generateBtn.querySelector('.button-text').textContent = 'Generate Image';
+        document.getElementById('generateText').textContent = 'Generate Image';
     }
 
     showResult(result, requestData) {

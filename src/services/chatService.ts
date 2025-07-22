@@ -167,9 +167,11 @@ export class ChatService {
       let responseContent = '';
       let imageData: any = null;
 
+      console.log(`[${requestId}] 📝 Message outputs:`, messageOutputs)
+      
       // Handle message responses
       if (messageOutputs.length > 0) {
-        responseContent = messageOutputs.map(output => (output as any).content).join('\n');
+        responseContent = messageOutputs.map(output => (output as any).content[0].text).join('\n');
       }
 
       // Handle image generation

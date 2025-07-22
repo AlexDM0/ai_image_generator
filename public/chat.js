@@ -92,7 +92,7 @@ class ChatInterface {
         this.setLoading(true);
 
         try {
-            const response = await fetch('/api/chat/send', {
+            const response = await fetch('/api/chat/message', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -25,7 +25,7 @@ export class OpenAIService {
       systemPrompt?: string;
     } = {}
   ): Promise<{
-    imageUrl: string;
+    imageUrl?: string;
     localImageUrl: string;
     filename: string;
     savedAt: string;
@@ -41,7 +41,7 @@ export class OpenAIService {
     const systemPrompt = options.systemPrompt || '';
     
     // Combine system prompt with user prompt if provided
-    const finalPrompt = systemPrompt ? `General system prompt:\n${systemPrompt}\n\n Image specific prompt:\n${prompt}` : prompt;
+    const finalPrompt = systemPrompt ? `General background information:\n${systemPrompt}\n\n Image specific prompt:\n${prompt}` : prompt;
     
     console.log(`[${requestId}] 🎨 IMAGE GENERATION REQUEST STARTED`);
     console.log(`[${requestId}] ⏰ Timestamp: ${new Date().toISOString()}`);
@@ -64,23 +64,23 @@ export class OpenAIService {
     });
     
     const openaiDuration = Date.now() - startTime;
+    const imageUrl = response.data?.[0]?.url;
+    const b64Json = response.data?.[0]?.b64_json;
+
     console.log(`[${requestId}] ✅ OpenAI API call completed in ${openaiDuration}ms`);
     console.log(`[${requestId}] 📊 OpenAI Response:`, {
       dataLength: response.data?.length || 0,
-      hasImageUrl: !!(response.data?.[0]?.url),
+      hasImageUrl: !!(imageUrl),
+      hasB64Json: !!(b64Json),
       created: response.created
     });
 
-    const imageUrl = response.data?.[0]?.url;
-    if (!imageUrl) {
-      console.error(`[${requestId}] ❌ No image URL returned from OpenAI`);
+    if (!imageUrl && !b64Json) {
+      console.error(`[${requestId}] ❌ No image URL nor b64_json returned from OpenAI`);
       console.error(`[${requestId}] 📋 Response data:`, response.data);
-      throw new Error('No image URL returned from OpenAI');
+      throw new Error('No image data returned from OpenAI');
     }
     
-    console.log(`[${requestId}] 🔗 Image URL received: ${imageUrl.substring(0, 50)}...`);
-    console.log(`[${requestId}] 💾 Starting file operations...`);
-
     // Generate filename with model, size, quality, and timestamp
     const filename = FileUtil.generateEnhancedFilename('png', {
       model: model,
@@ -97,21 +97,31 @@ export class OpenAIService {
       fullPath: filePath
     });
     
-    // Download and save the image
-    console.log(`[${requestId}] ⬇️  Downloading image from OpenAI...`);
-    const downloadStartTime = Date.now();
+    let savedImageUrl = '';
     
-    await FileUtil.downloadImage(imageUrl, filePath, requestId);
+    if (b64Json) {
+      // Handle base64 encoded image
+      console.log(`[${requestId}] 📥 Processing base64 image data...`);
+      const buffer = Buffer.from(b64Json, 'base64');
+      await FileUtil.saveBufferToFile(buffer, filePath);
+      savedImageUrl = `/images/${filename}`;
+      console.log(`[${requestId}] ✅ Base64 image saved to: ${filePath}`);
+    } else if (imageUrl) {
+      // Handle URL image
+      console.log(`[${requestId}] ⬇️  Downloading image from URL: ${imageUrl.substring(0, 50)}...`);
+      const downloadStartTime = Date.now();
+      await FileUtil.downloadImage(imageUrl, filePath, requestId);
+      const downloadDuration = Date.now() - downloadStartTime;
+      savedImageUrl = `/images/${filename}`;
+      console.log(`[${requestId}] ✅ Image downloaded and saved in ${downloadDuration}ms`);
+    }
     
-    const downloadDuration = Date.now() - downloadStartTime;
-    console.log(`[${requestId}] ✅ Image downloaded and saved in ${downloadDuration}ms`);
     console.log(`[${requestId}] 💾 Image saved to: ${filePath}`);
     
     // Return image information
-    const localImageUrl = `/images/${filename}`;
     const result = {
-      imageUrl: imageUrl,
-      localImageUrl: localImageUrl,
+      imageUrl: imageUrl || savedImageUrl, // Use the original URL if available, otherwise use the local path
+      localImageUrl: savedImageUrl,
       filename: filename,
       savedAt: new Date().toISOString(),
       model,

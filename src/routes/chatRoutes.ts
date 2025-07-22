@@ -67,6 +67,7 @@ export class ChatRoutes {
       console.log(`[${requestId}] ⏱️  Total request duration: ${duration}ms`);
       console.log(`[${requestId}] 🏁 CHAT REQUEST FINISHED SUCCESSFULLY\n`);
       
+      console.log('result', result.response.content)
       res.json({
         session: result.session,
         response: result.response
