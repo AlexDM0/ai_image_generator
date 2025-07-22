@@ -17,6 +17,7 @@ class ChatInterface {
         this.loadingIndicator = document.getElementById('loading');
         this.sizeSelect = document.getElementById('sizeSelect');
         this.qualitySelect = document.getElementById('qualitySelect');
+        this.clearChatBtn = document.getElementById('clearChatBtn');
         
         // Cost display element
         this.priceAmount = document.getElementById('priceAmount');
@@ -26,6 +27,7 @@ class ChatInterface {
         this.chatForm.addEventListener('submit', (e) => this.handleSubmit(e));
         this.messageInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
         this.messageInput.addEventListener('input', () => this.adjustTextareaHeight());
+        this.clearChatBtn.addEventListener('click', () => this.clearChat());
         
         // Pricing event listeners
         this.sizeSelect.addEventListener('change', () => this.updatePricing());
@@ -186,16 +188,9 @@ class ChatInterface {
 
         messageDiv.appendChild(contentDiv);
         
-        // Insert before welcome message or at the end
-        const welcomeMessage = this.chatMessages.querySelector('.welcome-message');
-        if (welcomeMessage && role === 'user') {
-            // First user message - insert after welcome
-            welcomeMessage.insertAdjacentElement('afterend', messageDiv);
-        } else {
-            this.chatMessages.appendChild(messageDiv);
-        }
-
-        // Scroll to bottom
+        // Always append new messages to the end of the chat
+        // The welcome message will naturally stay at the top
+        this.chatMessages.appendChild(messageDiv);
         this.scrollToBottom();
     }
 
@@ -209,6 +204,56 @@ class ChatInterface {
         } else {
             this.loadingIndicator.classList.add('hidden');
         }
+    }
+
+    async clearChat() {
+        if (this.isLoading) return;
+        
+        // Show confirmation dialog
+        const confirmed = confirm('Are you sure you want to clear the chat history? This cannot be undone.');
+        if (!confirmed) return;
+        
+        try {
+            this.setLoading(true);
+            
+            // Clear the chat UI
+            const welcomeMessage = this.chatMessages.querySelector('.welcome-message');
+            this.chatMessages.innerHTML = '';
+            if (welcomeMessage) {
+                this.chatMessages.appendChild(welcomeMessage);
+            }
+            
+            // Create a new session on the server
+            await this.createNewSession();
+            
+            // Show success message
+            this.showTemporaryMessage('Chat history cleared', 'success');
+        } catch (error) {
+            console.error('Error clearing chat:', error);
+            this.showTemporaryMessage('Failed to clear chat. Please try again.', 'error');
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    showTemporaryMessage(message, type = 'info') {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `temporary-message ${type}`;
+        messageDiv.textContent = message;
+        
+        // Add to the top of the chat messages
+        const firstChild = this.chatMessages.firstChild;
+        if (firstChild) {
+            this.chatMessages.insertBefore(messageDiv, firstChild);
+        } else {
+            this.chatMessages.appendChild(messageDiv);
+        }
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            messageDiv.classList.add('fade-out');
+            setTimeout(() => messageDiv.remove(), 300);
+        }, 3000);
     }
 
     scrollToBottom() {
